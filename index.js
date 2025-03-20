@@ -45,38 +45,57 @@ renderer.setSize(w, h);
 renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Add Play Button to UI
-const playButton = document.createElement("button");
-playButton.innerText = "PLAY";
-playButton.style.position = "absolute";
-playButton.style.bottom = "20px";
-playButton.style.right = "20px";
-playButton.style.padding = "10px 20px";
-playButton.style.fontSize = "1em";
-playButton.style.background = "black";
-playButton.style.color = "#52EACA";
-playButton.style.border = "2px solid #52EACA";
-playButton.style.textTransform = "uppercase";
-playButton.style.cursor = "pointer";
-playButton.style.fontFamily = "Helvetica, sans-serif";
-document.body.appendChild(playButton);
+// Function to add buttons after preloader finishes
+function addButtons() {
+    const playButton = document.createElement("button");
+    playButton.innerText = "PLAY";
+    playButton.style.position = "absolute";
+    playButton.style.bottom = "20px";
+    playButton.style.right = "20px";
+    playButton.style.padding = "10px 20px";
+    playButton.style.fontSize = "1em";
+    playButton.style.background = "black";
+    playButton.style.color = "#52EACA";
+    playButton.style.border = "2px solid #52EACA";
+    playButton.style.textTransform = "uppercase";
+    playButton.style.cursor = "pointer";
+    playButton.style.fontFamily = "Helvetica, sans-serif";
+    document.body.appendChild(playButton);
 
-// Add Reset Button to UI
-const resetButton = document.createElement("button");
-resetButton.innerText = "RESET";
-resetButton.style.position = "absolute";
-resetButton.style.bottom = "20px";
-resetButton.style.left = "20px";
-resetButton.style.padding = "10px 20px";
-resetButton.style.fontSize = "1em";
-resetButton.style.background = "black";
-resetButton.style.color = "#52EACA";
-resetButton.style.border = "2px solid #52EACA";
-resetButton.style.textTransform = "uppercase";
-resetButton.style.cursor = "pointer";
-resetButton.style.fontFamily = "Helvetica, sans-serif";
-document.body.appendChild(resetButton);
+    const resetButton = document.createElement("button");
+    resetButton.innerText = "RESET";
+    resetButton.style.position = "absolute";
+    resetButton.style.bottom = "20px";
+    resetButton.style.left = "20px";
+    resetButton.style.padding = "10px 20px";
+    resetButton.style.fontSize = "1em";
+    resetButton.style.background = "black";
+    resetButton.style.color = "#52EACA";
+    resetButton.style.border = "2px solid #52EACA";
+    resetButton.style.textTransform = "uppercase";
+    resetButton.style.cursor = "pointer";
+    resetButton.style.fontFamily = "Helvetica, sans-serif";
+    document.body.appendChild(resetButton);
 
+    playButton.addEventListener("click", () => {
+        if (audioContext.state === "suspended") {
+            audioContext.resume();
+        }
+        if (audio.paused) {
+            audio.play();
+            playButton.innerText = "PAUSE";
+        } else {
+            audio.pause();
+            playButton.innerText = "PLAY";
+        }
+    });
+
+    resetButton.addEventListener("click", () => {
+        audio.pause();
+        audio.currentTime = 0;
+        playButton.innerText = "PLAY";
+    });
+}
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 10);
@@ -123,27 +142,7 @@ const source = audioContext.createMediaElementSource(audio);
 source.connect(analyser);
 analyser.connect(audioContext.destination);
 
-// Toggle audio on Play Button Click
-playButton.addEventListener("click", () => {
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
-    }
-    if (audio.paused) {
-        audio.play();
-        playButton.innerText = "PAUSE";
-    } else {
-        audio.pause();
-        playButton.innerText = "PLAY";
-    }
-});
 
-
-// Reset Button Click - Stop audio and reset to start
-resetButton.addEventListener("click", () => {
-    audio.pause();
-    audio.currentTime = 0;
-    playButton.innerText = "PLAY";
-});
 
 // Post-processing setup
 const composer = new EffectComposer(renderer);
@@ -258,6 +257,7 @@ const interval = setInterval(() => {
         clearInterval(interval);
         setTimeout(() => {
             preloader.style.display = "none";
+            addButtons(); // Call function to add buttons after preloader finishes
         }, 500);
     }
 }, 200);
