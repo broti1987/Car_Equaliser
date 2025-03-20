@@ -63,7 +63,7 @@ document.body.appendChild(playButton);
 
 // Add Reset Button to UI
 const resetButton = document.createElement("button");
-resetButton.innerText = "\u21BB";
+resetButton.innerText = "RESET";
 resetButton.style.position = "absolute";
 resetButton.style.bottom = "20px";
 resetButton.style.left = "20px";
@@ -252,7 +252,7 @@ let progress = 0;
 const interval = setInterval(() => {
     if (progress < 100) {
         progress += 10;
-        loadingText.innerText = `Loading: ${progress}%`;
+        loadingText.innerText = `LOADING: ${progress}%`;
         loadingBar.style.width = `${progress}%`;
     } else {
         clearInterval(interval);
