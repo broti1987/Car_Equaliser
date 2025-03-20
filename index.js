@@ -58,6 +58,7 @@ playButton.style.color = "#52EACA";
 playButton.style.border = "2px solid #52EACA";
 playButton.style.textTransform = "uppercase";
 playButton.style.cursor = "pointer";
+playButton.style.fontFamily = "Helvetica, sans-serif";
 document.body.appendChild(playButton);
 
 // Add Reset Button to UI
@@ -73,6 +74,7 @@ resetButton.style.color = "#52EACA";
 resetButton.style.border = "2px solid #52EACA";
 resetButton.style.textTransform = "uppercase";
 resetButton.style.cursor = "pointer";
+resetButton.style.fontFamily = "Helvetica, sans-serif";
 document.body.appendChild(resetButton);
 
 
