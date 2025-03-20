@@ -9,6 +9,36 @@ const w = window.innerWidth;
 const h = window.innerHeight;
 const clock = new THREE.Clock();
 
+
+// Preloader
+const preloader = document.createElement("div");
+preloader.style.position = "absolute";
+preloader.style.top = "0";
+preloader.style.left = "0";
+preloader.style.width = "100%";
+preloader.style.height = "100%";
+preloader.style.background = "black";
+preloader.style.display = "flex";
+preloader.style.alignItems = "center";
+preloader.style.justifyContent = "center";
+preloader.style.flexDirection = "column";
+preloader.style.color = "#52EACA";
+preloader.style.fontSize = "20px";
+preloader.style.fontFamily = "sans-serif";
+document.body.appendChild(preloader);
+
+const loadingText = document.createElement("div");
+loadingText.innerText = "Loading: 0%";
+loadingText.style.marginBottom = "10px";
+preloader.appendChild(loadingText);
+
+const loadingBar = document.createElement("div");
+loadingBar.style.width = "0%";
+loadingBar.style.height = "4px";
+loadingBar.style.background = "#52EACA";
+loadingBar.style.transition = "width 0.5s";
+preloader.appendChild(loadingBar);
+
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(w, h);
@@ -29,6 +59,22 @@ playButton.style.border = "2px solid #52EACA";
 playButton.style.textTransform = "uppercase";
 playButton.style.cursor = "pointer";
 document.body.appendChild(playButton);
+
+// Add Reset Button to UI
+const resetButton = document.createElement("button");
+resetButton.innerText = "\u21BB";
+resetButton.style.position = "absolute";
+resetButton.style.bottom = "20px";
+resetButton.style.left = "20px";
+resetButton.style.padding = "10px 20px";
+resetButton.style.fontSize = "24px";
+resetButton.style.background = "black";
+resetButton.style.color = "#52EACA";
+resetButton.style.border = "2px solid #52EACA";
+resetButton.style.textTransform = "uppercase";
+resetButton.style.cursor = "pointer";
+document.body.appendChild(resetButton);
+
 
 // Camera
 const camera = new THREE.PerspectiveCamera(75, w / h, 0.1, 10);
@@ -87,6 +133,14 @@ playButton.addEventListener("click", () => {
         audio.pause();
         playButton.innerText = "PLAY";
     }
+});
+
+
+// Reset Button Click - Stop audio and reset to start
+resetButton.addEventListener("click", () => {
+    audio.pause();
+    audio.currentTime = 0;
+    playButton.innerText = "PLAY";
 });
 
 // Post-processing setup
@@ -190,3 +244,18 @@ window.addEventListener("resize", () => {
     renderer.setSize(width, height);
     composer.setSize(width, height);
 });
+
+// Hide preloader when loading completes
+let progress = 0;
+const interval = setInterval(() => {
+    if (progress < 100) {
+        progress += 10;
+        loadingText.innerText = `Loading: ${progress}%`;
+        loadingBar.style.width = `${progress}%`;
+    } else {
+        clearInterval(interval);
+        setTimeout(() => {
+            preloader.style.display = "none";
+        }, 500);
+    }
+}, 200);
